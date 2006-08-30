@@ -6,6 +6,27 @@
 #  PACKAGE_INCLUDE_DIR - The PACKAGE include directory
 #  PACKAGE_LIBRARIES - Link these to use PACKAGE
 #
+###################################################################
+#
+# Copyright (C) yyyy  name of author
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor,
+# Boston, MA  02110-1301, USA.
+#
+###################################################################
+#
 #  Copyright (c) <YEAR>, <OWNER>
 #  All rights reserved.
 #
@@ -40,46 +61,49 @@
 #
 
 IF (PACKAGE_INCLUDE_DIR AND PACKAGE_LIBRARIES)
-	# in cache already
-	SET(PACKAGE_FOUND TRUE)
+  # in cache already
+  SET(PACKAGE_FOUND TRUE)
 ELSE (PACKAGE_INCLUDE_DIR AND PACKAGE_LIBRARIES)
 
-	# use pkg-config to get the directories and then use these values
-	# in the FIND_PATH() and FIND_LIBRARY() calls
-	INCLUDE(UsePkgConfig)
+  # use pkg-config to get the directories and then use these values
+  # in the FIND_PATH() and FIND_LIBRARY() calls
+  INCLUDE(UsePkgConfig)
 
-	PKGCONFIG(libgdal _libPACKAGEIncDir _libPACKAGELinkDir _libPACKAGELinkFlags _libPACKAGECflags)
+  PKGCONFIG(libgdal _libPACKAGEIncDir _libPACKAGELinkDir _libPACKAGELinkFlags _libPACKAGECflags)
 
-	FIND_PATH(PACKAGE_INCLUDE_DIR gdal.h
-		/usr/include
-		/usr/local/include
-	)
+  FIND_PATH(PACKAGE_INCLUDE_DIR gdal.h
+    /usr/include
+    /usr/local/include
+  )
 
-	FIND_LIBRARY(PACKAGE_LIBRARY NAMES gdal
-		PATHS
-		${_libPACKAGELinkDir}
-		/usr/lib
-		/usr/local/lib
-	)
+  FIND_LIBRARY(PACKAGE_LIBRARY NAMES gdal
+    PATHS
+    ${_libPACKAGELinkDir}
+    /usr/lib
+    /usr/local/lib
+  )
 
-	SET(PACKAGE_LIBRARIES ${PACKAGE_LIBRARY} CACHE INTERNAL "The libraries for libgdal" )
+  SET(PACKAGE_LIBRARIES ${PACKAGE_LIBRARY} CACHE INTERNAL "The libraries for libgdal" )
 
-	IF (PACKAGE_INCLUDE_DIR AND PACKAGE_LIBRARIES)
-		SET(PACKAGE_FOUND TRUE)
-	ENDIF (PACKAGE_INCLUDE_DIR AND PACKAGE_LIBRARIES)
+  IF (PACKAGE_INCLUDE_DIR AND PACKAGE_LIBRARIES)
+    SET(PACKAGE_FOUND TRUE)
+  ENDIF (PACKAGE_INCLUDE_DIR AND PACKAGE_LIBRARIES)
 
-	IF (PACKAGE_FOUND)
-		if (NOT libPACKAGE_FIND_QUIETLY)
-			message(STATUS "Found PACKAGE: ${PACKAGE_LIBRARIES}")
-		ENDIF (NOT libPACKAGE_FIND_QUIETLY)
-	ELSE (PACKAGE_FOUND)
-		if (libPACKAGE_FIND_REQUIRED)
-			message(FATAL_ERROR "Could NOT find PACKAGE")
-		ENDIF (libPACKAGE_FIND_REQUIRED)
-	ENDIF (PACKAGE_FOUND)
+  IF (PACKAGE_FOUND)
+    if (NOT libPACKAGE_FIND_QUIETLY)
+      message(STATUS "Found PACKAGE: ${PACKAGE_LIBRARIES}")
+    ENDIF (NOT libPACKAGE_FIND_QUIETLY)
+  ELSE (PACKAGE_FOUND)
+    if (libPACKAGE_FIND_REQUIRED)
+      message(FATAL_ERROR "Could NOT find PACKAGE")
+    ENDIF (libPACKAGE_FIND_REQUIRED)
+  ENDIF (PACKAGE_FOUND)
 
-	MARK_AS_ADVANCED(
-		PACKAGE_INCLUDE_DIR PACKAGE_LIBRARIES 
-	)
+  MARK_AS_ADVANCED(
+    PACKAGE_INCLUDE_DIR PACKAGE_LIBRARIES 
+  )
 
 ENDIF (PACKAGE_INCLUDE_DIR AND PACKAGE_LIBRARIES)
+
+# vim:et ts=2 sw=2 comments=\:\#
+
