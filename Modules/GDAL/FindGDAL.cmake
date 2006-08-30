@@ -69,18 +69,23 @@ ELSE (GDAL_INCLUDE_DIR AND GDAL_LIBRARIES)
   # in the FIND_PATH() and FIND_LIBRARY() calls
   INCLUDE(UsePkgConfig)
 
-  PKGCONFIG(libgdal _libGDALIncDir _libGDALLinkDir _libGDALLinkFlags _libGDALCflags)
+  PKGCONFIG(gdal _libGDALIncDir _libGDALLinkDir _libGDALLinkFlags _libGDALCflags)
 
   FIND_PATH(GDAL_INCLUDE_DIR gdal.h
-    /usr/include
-    /usr/local/include
+    NAMES
+      ${_libGDALIncDir}
+    PATHS
+      /usr/include
+      /usr/local/include
   )
 
-  FIND_LIBRARY(GDAL_LIBRARY NAMES gdal
+  FIND_LIBRARY(GDAL_LIBRARY
+    NAMES
+      gdal
     PATHS
-    ${_libGDALLinkDir}
-    /usr/lib
-    /usr/local/lib
+      ${_libGDALLinkDir}
+      /usr/lib
+      /usr/local/lib
   )
 
   SET(GDAL_LIBRARIES ${GDAL_LIBRARY} CACHE INTERNAL "The libraries for libgdal" )
