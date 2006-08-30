@@ -6,6 +6,27 @@
 #  GDAL_INCLUDE_DIR - the libusb include directory
 #  GDAL_LIBRARIES - Link these to use libusb
 #
+###################################################################
+#
+#  Copyright (c) 2006, Andreas Schneider <mail@cynapses.org>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor,
+# Boston, MA  02110-1301, USA.
+#
+###################################################################
+#
 #  Copyright (c) 2006, Andreas Schneider <mail@cynapses.org>
 #  All rights reserved.
 #
@@ -40,46 +61,48 @@
 #
 
 IF (GDAL_INCLUDE_DIR AND GDAL_LIBRARIES)
-	# in cache already
-	SET(GDAL_FOUND TRUE)
+  # in cache already
+  SET(GDAL_FOUND TRUE)
 ELSE (GDAL_INCLUDE_DIR AND GDAL_LIBRARIES)
 
-	# use pkg-config to get the directories and then use these values
-	# in the FIND_PATH() and FIND_LIBRARY() calls
-	INCLUDE(UsePkgConfig)
+  # use pkg-config to get the directories and then use these values
+  # in the FIND_PATH() and FIND_LIBRARY() calls
+  INCLUDE(UsePkgConfig)
 
-	PKGCONFIG(libgdal _libGDALIncDir _libGDALLinkDir _libGDALLinkFlags _libGDALCflags)
+  PKGCONFIG(libgdal _libGDALIncDir _libGDALLinkDir _libGDALLinkFlags _libGDALCflags)
 
-	FIND_PATH(GDAL_INCLUDE_DIR gdal.h
-		/usr/include
-		/usr/local/include
-	)
+  FIND_PATH(GDAL_INCLUDE_DIR gdal.h
+    /usr/include
+    /usr/local/include
+  )
 
-	FIND_LIBRARY(GDAL_LIBRARY NAMES gdal
-		PATHS
-		${_libGDALLinkDir}
-		/usr/lib
-		/usr/local/lib
-	)
+  FIND_LIBRARY(GDAL_LIBRARY NAMES gdal
+    PATHS
+    ${_libGDALLinkDir}
+    /usr/lib
+    /usr/local/lib
+  )
 
-	SET(GDAL_LIBRARIES ${GDAL_LIBRARY} CACHE INTERNAL "The libraries for libgdal" )
+  SET(GDAL_LIBRARIES ${GDAL_LIBRARY} CACHE INTERNAL "The libraries for libgdal" )
 
-	IF (GDAL_INCLUDE_DIR AND GDAL_LIBRARIES)
-		SET(GDAL_FOUND TRUE)
-	ENDIF (GDAL_INCLUDE_DIR AND GDAL_LIBRARIES)
+  IF (GDAL_INCLUDE_DIR AND GDAL_LIBRARIES)
+    SET(GDAL_FOUND TRUE)
+  ENDIF (GDAL_INCLUDE_DIR AND GDAL_LIBRARIES)
 
-	IF (GDAL_FOUND)
-		if (NOT libGDAL_FIND_QUIETLY)
-			message(STATUS "Found GDAL: ${GDAL_LIBRARIES}")
-		ENDIF (NOT libGDAL_FIND_QUIETLY)
-	ELSE (GDAL_FOUND)
-		if (libGDAL_FIND_REQUIRED)
-			message(FATAL_ERROR "Could NOT find GDAL")
-		ENDIF (libGDAL_FIND_REQUIRED)
-	ENDIF (GDAL_FOUND)
+  IF (GDAL_FOUND)
+    if (NOT libGDAL_FIND_QUIETLY)
+      message(STATUS "Found GDAL: ${GDAL_LIBRARIES}")
+    ENDIF (NOT libGDAL_FIND_QUIETLY)
+  ELSE (GDAL_FOUND)
+    if (libGDAL_FIND_REQUIRED)
+      message(FATAL_ERROR "Could NOT find GDAL")
+    ENDIF (libGDAL_FIND_REQUIRED)
+  ENDIF (GDAL_FOUND)
 
-	MARK_AS_ADVANCED(
-		GDAL_INCLUDE_DIR GDAL_LIBRARIES 
-	)
+  MARK_AS_ADVANCED(
+    GDAL_INCLUDE_DIR GDAL_LIBRARIES 
+  )
 
 ENDIF (GDAL_INCLUDE_DIR AND GDAL_LIBRARIES)
+
+# vim:et ts=2 sw=2 comments=\:\#
