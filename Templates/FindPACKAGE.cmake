@@ -1,10 +1,10 @@
 #
-# - Try to find the PACKAGE
+# - Try to find the <PACKAGE>
 # Once done this defines
 #
-#  PACKAGE_FOUND - The system has PACKAGE
-#  PACKAGE_INCLUDE_DIR - The PACKAGE include directory
-#  PACKAGE_LIBRARIES - Link these to use PACKAGE
+#  <PACKAGE>_FOUND - The system has <PACKAGE>
+#  <PACKAGE>_INCLUDE_DIR - The <PACKAGE> include directory
+#  <PACKAGE>_LIBRARIES - Link these to use <PACKAGE>
 #
 ###################################################################
 #
@@ -60,50 +60,54 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-IF (PACKAGE_INCLUDE_DIR AND PACKAGE_LIBRARIES)
+IF (<PACKAGE>_INCLUDE_DIR AND <PACKAGE>_LIBRARIES)
   # in cache already
-  SET(PACKAGE_FOUND TRUE)
-ELSE (PACKAGE_INCLUDE_DIR AND PACKAGE_LIBRARIES)
+  SET(<PACKAGE>_FOUND TRUE)
+ELSE (<PACKAGE>_INCLUDE_DIR AND <PACKAGE>_LIBRARIES)
 
   # use pkg-config to get the directories and then use these values
   # in the FIND_PATH() and FIND_LIBRARY() calls
   INCLUDE(UsePkgConfig)
 
-  PKGCONFIG(libgdal _libPACKAGEIncDir _libPACKAGELinkDir _libPACKAGELinkFlags _libPACKAGECflags)
+  PKGCONFIG(<LIBRARY> _lib<PACKAGE>IncDir _lib<PACKAGE>LinkDir _lib<PACKAGE>LinkFlags _lib<PACKAGE>Cflags)
 
-  FIND_PATH(PACKAGE_INCLUDE_DIR gdal.h
-    /usr/include
-    /usr/local/include
+  FIND_PATH(<PACKAGE>_INCLUDE_DIR
+    NAMES
+      <FILENAME.h>
+    PATHS
+      ${_lib<PACKAGE>IncDir}
+      /usr/include
+      /usr/local/include
   )
 
-  FIND_LIBRARY(PACKAGE_LIBRARY NAMES gdal
+  FIND_LIBRARY(<PACKAGE>_LIBRARY NAMES gdal
     PATHS
-    ${_libPACKAGELinkDir}
+    ${_lib<PACKAGE>LinkDir}
     /usr/lib
     /usr/local/lib
   )
 
-  SET(PACKAGE_LIBRARIES ${PACKAGE_LIBRARY} CACHE INTERNAL "The libraries for libgdal" )
+  SET(<PACKAGE>_LIBRARIES ${<PACKAGE>_LIBRARY} CACHE INTERNAL "The libraries for <PACKAGE>" )
 
-  IF (PACKAGE_INCLUDE_DIR AND PACKAGE_LIBRARIES)
-    SET(PACKAGE_FOUND TRUE)
-  ENDIF (PACKAGE_INCLUDE_DIR AND PACKAGE_LIBRARIES)
+  IF (<PACKAGE>_INCLUDE_DIR AND <PACKAGE>_LIBRARIES)
+    SET(<PACKAGE>_FOUND TRUE)
+  ENDIF (<PACKAGE>_INCLUDE_DIR AND <PACKAGE>_LIBRARIES)
 
-  IF (PACKAGE_FOUND)
-    if (NOT libPACKAGE_FIND_QUIETLY)
-      message(STATUS "Found PACKAGE: ${PACKAGE_LIBRARIES}")
-    ENDIF (NOT libPACKAGE_FIND_QUIETLY)
-  ELSE (PACKAGE_FOUND)
-    if (libPACKAGE_FIND_REQUIRED)
-      message(FATAL_ERROR "Could NOT find PACKAGE")
-    ENDIF (libPACKAGE_FIND_REQUIRED)
-  ENDIF (PACKAGE_FOUND)
+  IF (<PACKAGE>_FOUND)
+    if (NOT lib<PACKAGE>_FIND_QUIETLY)
+      message(STATUS "Found <PACKAGE>: ${<PACKAGE>_LIBRARIES}")
+    ENDIF (NOT lib<PACKAGE>_FIND_QUIETLY)
+  ELSE (<PACKAGE>_FOUND)
+    if (lib<PACKAGE>_FIND_REQUIRED)
+      message(FATAL_ERROR "Could NOT find <PACKAGE>")
+    ENDIF (lib<PACKAGE>_FIND_REQUIRED)
+  ENDIF (<PACKAGE>_FOUND)
 
   MARK_AS_ADVANCED(
-    PACKAGE_INCLUDE_DIR PACKAGE_LIBRARIES 
+    <PACKAGE>_INCLUDE_DIR <PACKAGE>_LIBRARIES 
   )
 
-ENDIF (PACKAGE_INCLUDE_DIR AND PACKAGE_LIBRARIES)
+ENDIF (<PACKAGE>_INCLUDE_DIR AND <PACKAGE>_LIBRARIES)
 
 # vim:et ts=2 sw=2 comments=\:\#
 
