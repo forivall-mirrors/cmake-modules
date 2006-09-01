@@ -61,28 +61,26 @@
 #
 
 IF (MSGFMT_EXECUTABLE)
-	# in cache alread?
-	SET(MSGFMT_FOUND TRUE)
-
+  # in cache alread?
+  SET(MSGFMT_FOUND TRUE)
 ELSE (MSGFMT_EXECUTABLE)
-	IF (UNIX)
-		FIND_PROGRAM(MSGFMT_EXECUTABLE
-			NAMES
-				msgfmt
-			PATHS
-				/usr/bin
-				/usr/local/bin
-		)
-		IF(MSGFMT_EXECUTABLE)
-			SET(MSGFMT_FOUND TRUE)
+  IF (UNIX)
+    FIND_PROGRAM(MSGFMT_EXECUTABLE
+      NAMES
+        msgfmt
+      PATHS
+        /usr/bin
+        /usr/local/bin
+    )
 
-		ELSE(MSGFMT_EXECUTABLE)
-			MESSAGE(FATAL_ERROR "msgfmt not found - po files can't be processed")
+    IF(MSGFMT_EXECUTABLE)
+      SET(MSGFMT_FOUND TRUE)
+    ELSE(MSGFMT_EXECUTABLE)
+      MESSAGE(FATAL_ERROR "msgfmt not found - po files can't be processed")
+    ENDIF(MSGFMT_EXECUTABLE)
 
-		ENDIF(MSGFMT_EXECUTABLE)
-
-		MARK_AS_ADVANCED(MSGFMT_EXECUTABLE)
-	ENDIF(UNIX)
+    MARK_AS_ADVANCED(MSGFMT_EXECUTABLE)
+  ENDIF(UNIX)
 ENDIF (MSGFMT_EXECUTABLE)
 
 # vim:et ts=2 sw=2 comments=\:\#

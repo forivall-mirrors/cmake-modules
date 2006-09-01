@@ -2,9 +2,9 @@
 # - Try to find the gdal library
 # Once done this defines
 #
-#  GDAL_FOUND - system has libusb
-#  GDAL_INCLUDE_DIR - the libusb include directory
-#  GDAL_LIBRARIES - Link these to use libusb
+#  GDAL_FOUND - system has gdal
+#  GDAL_INCLUDE_DIRS - the gdal include directory
+#  GDAL_LIBRARIES - Link these to use gdal
 #
 ###################################################################
 #
@@ -60,10 +60,10 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-IF (GDAL_INCLUDE_DIR AND GDAL_LIBRARIES)
+IF (GDAL_INCLUDE_DIRS AND GDAL_LIBRARIES)
   # in cache already
   SET(GDAL_FOUND TRUE)
-ELSE (GDAL_INCLUDE_DIR AND GDAL_LIBRARIES)
+ELSE (GDAL_INCLUDE_DIRS AND GDAL_LIBRARIES)
 
   # use pkg-config to get the directories and then use these values
   # in the FIND_PATH() and FIND_LIBRARY() calls
@@ -88,11 +88,12 @@ ELSE (GDAL_INCLUDE_DIR AND GDAL_LIBRARIES)
       /usr/local/lib
   )
 
+  SET(GDAL_INCLUDE_DIRS ${GDAL_INCLUDE_DIR})
   SET(GDAL_LIBRARIES ${GDAL_LIBRARY} CACHE INTERNAL "The libraries for libgdal" )
 
-  IF (GDAL_INCLUDE_DIR AND GDAL_LIBRARIES)
+  IF (GDAL_INCLUDE_DIRS AND GDAL_LIBRARIES)
     SET(GDAL_FOUND TRUE)
-  ENDIF (GDAL_INCLUDE_DIR AND GDAL_LIBRARIES)
+  ENDIF (GDAL_INCLUDE_DIRS AND GDAL_LIBRARIES)
 
   IF (GDAL_FOUND)
     if (NOT libGDAL_FIND_QUIETLY)
@@ -105,9 +106,10 @@ ELSE (GDAL_INCLUDE_DIR AND GDAL_LIBRARIES)
   ENDIF (GDAL_FOUND)
 
   MARK_AS_ADVANCED(
-    GDAL_INCLUDE_DIR GDAL_LIBRARIES 
+    GDAL_INCLUDE_DIRS
+    GDAL_LIBRARIES
   )
 
-ENDIF (GDAL_INCLUDE_DIR AND GDAL_LIBRARIES)
+ENDIF (GDAL_INCLUDE_DIRS AND GDAL_LIBRARIES)
 
 # vim:et ts=2 sw=2 comments=\:\#

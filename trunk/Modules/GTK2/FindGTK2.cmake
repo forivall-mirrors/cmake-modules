@@ -1,7 +1,7 @@
 #
 # try to find GTK2 (and glib) and GTK2GLArea
 #
-# GTK2_INCLUDE_DIR   - Directories to include to use GTK2
+# GTK2_INCLUDE_DIRS  - Directories to include to use GTK2
 # GTK2_LIBRARIES     - Files to link against to use GTK2
 # GTK2_FOUND         - If false, don't try to use GTK2
 # GTK2_GL_FOUND      - If false, don't try to use GTK2's GL features
@@ -62,10 +62,10 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-IF (GTK2_LIBRARIES AND GTK2_INCLUDE_DIR)
+IF (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
   # in cache already
   SET(GTK2_FOUND TRUE)
-ELSE (GTK2_LIBRARIES AND GTK2_INCLUDE_DIR)
+ELSE (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
   IF(UNIX)
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
@@ -255,7 +255,7 @@ ELSE (GTK2_LIBRARIES AND GTK2_INCLUDE_DIR)
                     # supporting libraries have also been found.
 
                     SET(GTK2_FOUND TRUE)
-                    SET(GTK2_INCLUDE_DIR
+                    SET(GTK2_INCLUDE_DIRS
                       ${GTK2_GTK_INCLUDE_PATH}
                       ${GTK2_GLIBCONFIG_INCLUDE_PATH}
                       ${GTK2_GLIB_INCLUDE_PATH}
@@ -284,6 +284,7 @@ ELSE (GTK2_LIBRARIES AND GTK2_INCLUDE_DIR)
                         ${GTK2_LIBRARIES}
                         ${GTK2_GTHREAD_LIBRARY}
                       )
+                    SET(GTK2_LIBRARIES ${GTK2_LIBRARIES} CACHE INTERNAL "The libraries for GTK2"
                     ENDIF(GTK2_GTHREAD_LIBRARY)
                   ELSE(GTK2_CAIRO_INCLUDE_PATH)
                     MESSAGE(STATUS "Can not find cairo")
@@ -338,6 +339,6 @@ ELSE (GTK2_LIBRARIES AND GTK2_INCLUDE_DIR)
       GTK2_PANGO_INCLUDE_PATH
     )
   ENDIF(UNIX)
-ENDIF (GTK2_LIBRARIES AND GTK2_INCLUDE_DIR)
+ENDIF (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
 
 # vim:et ts=2 sw=2 comments=\:\#
