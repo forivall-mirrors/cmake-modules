@@ -255,6 +255,7 @@ ELSE (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
                     # supporting libraries have also been found.
 
                     SET(GTK2_FOUND TRUE)
+
                     SET(GTK2_INCLUDE_DIRS
                       ${GTK2_GTK_INCLUDE_PATH}
                       ${GTK2_GLIBCONFIG_INCLUDE_PATH}
@@ -263,6 +264,7 @@ ELSE (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
                       ${GTK2_GDKCONFIG_INCLUDE_PATH}
                       ${GTK2_ATK_INCLUDE_PATH}
                       ${GTK2_CAIRO_INCLUDE_PATH}
+                      CACHE INTERNAL "The include directories for GTK2"
                     )
 
                     SET(GTK2_LIBRARIES
