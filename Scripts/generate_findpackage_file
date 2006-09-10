@@ -71,8 +71,9 @@ file.printf("#  #{cmakeDefsName} - Compiler switches required for using #{packag
 file.printf("#\n")
 file.printf("#  Copyright (c) #{t.year} #{name} <#{email}>\n")
 file.printf("#\n")
-file.printf("# Redistribution and use is allowed according to the terms of the New BSD license.\n")
-file.printf("# For details see the accompanying COPYING-CMAKE-SCRIPTS file.\n")
+file.printf("#  Redistribution and use is allowed according to the terms of the New\n")
+file.printf("#  BSD license.\n")
+file.printf("#  For details see the accompanying COPYING-CMAKE-SCRIPTS file.\n")
 file.printf("#\n")
 
 file.printf("\n")
