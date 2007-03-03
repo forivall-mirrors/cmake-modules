@@ -1,15 +1,16 @@
-# - Try to find FFMPEG
+# - Try to find FFmpeg
 # Once done this will define
 #
-#  FFMPEG_FOUND - system has FFMPEG
-#  FFMPEG_INCLUDE_DIRS - the FFMPEG include directory
-#  FFMPEG_LIBRARIES - Link these to use FFMPEG
-#  FFMPEG_DEFINITIONS - Compiler switches required for using FFMPEG
+#  FFMPEG_FOUND - system has FFmpeg
+#  FFMPEG_INCLUDE_DIRS - the FFmpeg include directory
+#  FFMPEG_LIBRARIES - Link these to use FFmpeg
+#  FFMPEG_DEFINITIONS - Compiler switches required for using FFmpeg
 #
 #  Copyright (c) 2006 Andreas Schneider <mail@cynapses.org>
 #
-# Redistribution and use is allowed according to the terms of the New BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+#  Redistribution and use is allowed according to the terms of the New
+#  BSD license.
+#  For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 #
 
 
@@ -38,7 +39,7 @@ else (FFMPEG_LIBRARIES AND FFMPEG_INCLUDE_DIRS)
       ffmpeg
   )
 
-  find_library(AVUTIL_LIBRARY
+ find_library(AVUTIL_LIBRARY
     NAMES
       avutil
     PATHS
@@ -48,6 +49,7 @@ else (FFMPEG_LIBRARIES AND FFMPEG_INCLUDE_DIRS)
       /opt/local/lib
       /sw/lib
   )
+
   find_library(AVCODEC_LIBRARY
     NAMES
       avcodec
@@ -58,6 +60,7 @@ else (FFMPEG_LIBRARIES AND FFMPEG_INCLUDE_DIRS)
       /opt/local/lib
       /sw/lib
   )
+
   find_library(AVFORMAT_LIBRARY
     NAMES
       avformat
@@ -72,11 +75,29 @@ else (FFMPEG_LIBRARIES AND FFMPEG_INCLUDE_DIRS)
   set(FFMPEG_INCLUDE_DIRS
     ${FFMPEG_INCLUDE_DIR}
   )
-  set(FFMPEG_LIBRARIES
-    ${AVUTIL_LIBRARY}
-    ${AVCODEC_LIBRARY}
-    ${AVFORMAT_LIBRARY}
-)
+
+  set(FFMPEG_LIBRARIES)
+
+  if (AVUTIL_LIBRARY)
+    set(FFMPEG_LIBRARIES
+      ${FFMPEG_LIBRARIES}
+      ${AVUTIL_LIBRARY}
+    )
+  endif (AVUTIL_LIBRARY)
+
+  if (AVCODEC_LIBRARY)
+    set(FFMPEG_LIBRARIES
+      ${FFMPEG_LIBRARIES}
+      ${AVCODEC_LIBRARY}
+    )
+  endif (AVCODEC_LIBRARY)
+
+  if (AVFORMAT_LIBRARY)
+    set(FFMPEG_LIBRARIES
+      ${FFMPEG_LIBRARIES}
+      ${AVFORMAT_LIBRARY}
+    )
+  endif (AVFORMAT_LIBRARY)
 
   if (FFMPEG_INCLUDE_DIRS AND FFMPEG_LIBRARIES)
      set(FFMPEG_FOUND TRUE)
@@ -84,11 +105,11 @@ else (FFMPEG_LIBRARIES AND FFMPEG_INCLUDE_DIRS)
 
   if (FFMPEG_FOUND)
     if (NOT FFMPEG_FIND_QUIETLY)
-      message(STATUS "Found FFMPEG: ${FFMPEG_LIBRARIES}")
+      message(STATUS "Found FFmpeg: ${FFMPEG_LIBRARIES}")
     endif (NOT FFMPEG_FIND_QUIETLY)
   else (FFMPEG_FOUND)
     if (FFMPEG_FIND_REQUIRED)
-      message(FATAL_ERROR "Could not find FFMPEG")
+      message(FATAL_ERROR "Could not find FFmpeg")
     endif (FFMPEG_FIND_REQUIRED)
   endif (FFMPEG_FOUND)
 
