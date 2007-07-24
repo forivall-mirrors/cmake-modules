@@ -8,6 +8,34 @@
 #  BOOST_DEFINITIONS - Compiler switches required for using Boost
 #  BOOST_LIBRARIES_SUFFIX - Boost libraries name suffix (e.g -vc71-mt-gd-1_34, -gcc41-mt...)
 #
+#  BOOST_DATE_TIME_FOUND               True if Boost Date Time was found.
+#  BOOST_FILESYSTEM_FOUND              True if Boost Filesystem was found.
+#  BOOST_IOSTREAMS_FOUND               True if Boost Iostream was found.
+#  BOOST_PRG_EXEC_MONITOR_FOUND        True if Boost Program Exec Monitor was found.
+#  BOOST_PROGRAM_OPTIONS_FOUND         True if Boost Program Options was found.
+#  BOOST_PYTHON_FOUND                  True if Boost Python was found.
+#  BOOST_REGEX_FOUND                   True if Boost Regex was found.
+#  BOOST_SERIALIZATION_FOUND           True if Boost Serialization was found.
+#  BOOST_SIGNALS_FOUND                 True if Boost Signals was found.
+#  BOOST_TEST_EXEC_MONITOR_FOUND       True if Boost Test Exec Monitor was found.
+#  BOOST_THREAD-MT_FOUND               True if Boost Thread was found.
+#  BOOST_UNIT_TEST_FRAMEWORK_FOUND     True if Boost Unit Test Framework was found.
+#  BOOST_WSERIALIZATION_FOUND          True if Boost WSerialization was found.
+#
+#  BOOST_DATE_TIME_LIBRARY             The Boost Date Time libary.
+#  BOOST_FILESYSTEM_LIBRARY            The Boost Filesystem libary.
+#  BOOST_IOSTREAMS_LIBRARY             The Boost Iostream libary.
+#  BOOST_PRG_EXEC_MONITOR_LIBRARY      The Boost Program libary.
+#  BOOST_PROGRAM_OPTIONS_LIBRARY       The Boost Program libary.
+#  BOOST_PYTHON_LIBRARY                The Boost Python libary.
+#  BOOST_REGEX_LIBRARY                 The Boost Regex libary.
+#  BOOST_SERIALIZATION_LIBRARY         The Boost Serialization libary.
+#  BOOST_SIGNALS_LIBRARY               The Boost Signals libary.
+#  BOOST_TEST_EXEC_MONITOR_LIBRARY     The Boost Test Exec Monitor libary.
+#  BOOST_THREAD_LIBRARY                The Boost Thread libary.
+#  BOOST_UNIT_TEST_FRAMEWORK_LIBRARY   The Boost Unit Test Framework libary.
+#  BOOST_WSERIALIZATION_LIBRARY        The Boost WSerialization libary.
+#
 #  Copyright (c) 2006 Andreas Schneider <mail@cynapses.org>
 #  Copyright (c) 2007 Wengo
 #
