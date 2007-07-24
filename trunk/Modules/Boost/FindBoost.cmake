@@ -6,8 +6,10 @@
 #  BOOST_LIBRARIES - Link these to use Boost
 #  BOOST_LIBRARY_DIRS - The path to where the Boost library files are.
 #  BOOST_DEFINITIONS - Compiler switches required for using Boost
+#  BOOST_LIBRARIES_SUFFIX - Boost libraries name suffix (e.g -vc71-mt-gd-1_34, -gcc41-mt...)
 #
 #  Copyright (c) 2006 Andreas Schneider <mail@cynapses.org>
+#  Copyright (c) 2007 Wengo
 #
 #  Redistribution and use is allowed according to the terms of the New
 #  BSD license.
@@ -24,8 +26,10 @@ else (BOOST_LIBRARIES AND BOOST_INCLUDE_DIRS)
   set(BOOST_PATH_SUFFIX
     boost-1_34_1
     boost-1_34_0
+    boost-1_34
     boost-1_33_1
     boost-1_33_0
+    boost-1_33
   )
 
   if (WIN32)
@@ -44,243 +48,241 @@ else (BOOST_LIBRARIES AND BOOST_INCLUDE_DIRS)
     # a library is selected for linking.
     set(BOOST_LIB_DIAGNOSTIC_DEFINITIONS "-DBOOST_LIB_DIAGNOSTIC")
 
-    set(BOOST_SEARCH_DIRS
+    set(BOOST_INCLUDE_SEARCH_DIRS
+      $ENV{BOOSTINCLUDEDIR}
+      $ENV{BOOST_ROOT}/include
       C:/boost/include
+      "C:/Program Files/boost/boost_1_34_0"
+      "C:/Program Files/boost/boost_1_33_1"
       # D: is very often the cdrom drive, if you don't have a
       # cdrom inserted it will popup a very annoying dialog
       #D:/boost/include
-      $ENV{BOOST_ROOT}/include
-      $ENV{BOOSTINCLUDEDIR}
+      /usr/include
+      /usr/local/include
+      /opt/local/include
+      /sw/include
+    )
 
-      C:/boost/lib
-      $ENV{BOOST_ROOT}/lib
+    set(BOOST_LIBRARIES_SEARCH_DIRS
       $ENV{BOOSTLIBDIR}
+      $ENV{BOOST_ROOT}/lib
+      C:/boost/lib
+      "C:/Program Files/boost/boost_1_34_0/lib"
+      "C:/Program Files/boost/boost_1_33_1/lib"
+      /usr/lib
+      /usr/local/lib
+      /opt/local/lib
+      /sw/lib
     )
 
     if (MSVC71)
       if (CMAKE_BUILD_TYPE STREQUAL Debug)
-        set(BOOST_LIB_SUFFIXES -vc71-mt-gd)
+        set(BOOST_LIBRARIES_SUFFIXES
+          -vc71-mt-gd-1_34
+          -vc71-mt-gd-1_33_1
+        )
       else (CMAKE_BUILD_TYPE STREQUAL Debug)
-        set(BOOST_LIB_SUFFIXES -vc71-mt)
+        set(BOOST_LIBRARIES_SUFFIXES
+          -vc71-mt-1_34
+          -vc71-mt-1_33_1
+        )
       endif (CMAKE_BUILD_TYPE STREQUAL Debug)
     endif (MSVC71)
 
     if (MSVC80)
       if (CMAKE_BUILD_TYPE STREQUAL Debug)
-        set(BOOST_LIB_SUFFIXES -vc80-mt-gd)
+        set(BOOST_LIBRARIES_SUFFIXES
+          -vc80-mt-gd-1_34
+          -vc80-mt-gd-1_33_1
+        )
       else (CMAKE_BUILD_TYPE STREQUAL Debug)
-        set(BOOST_LIB_SUFFIXES -vc80-mt)
+        set(BOOST_LIBRARIES_SUFFIXES
+          -vc80-mt-1_34
+          -vc80-mt-1_33_1
+        )
       endif (CMAKE_BUILD_TYPE STREQUAL Debug)
     endif (MSVC80)
 
     if (MINGW)
       if (CMAKE_BUILD_TYPE STREQUAL Debug)
-        set(BOOST_LIB_SUFFIXES -mgw-mt-d)
+        set(BOOST_LIBRARIES_SUFFIXES
+          -mgw-mt-d
+        )
       else (CMAKE_BUILD_TYPE STREQUAL Debug)
-        set(BOOST_LIB_SUFFIXES -mgw-mt)
+        set(BOOST_LIBRARIES_SUFFIXES
+          -mgw-mt
+        )
       endif (CMAKE_BUILD_TYPE STREQUAL Debug)
     endif (MINGW)
 
     if (CYGWIN)
       if (CMAKE_BUILD_TYPE STREQUAL Debug)
-        set(BOOST_LIB_SUFFIXES -gcc-mt-d)
+        set(BOOST_LIBRARIES_SUFFIXES
+          -gcc-mt-d
+        )
       else (CMAKE_BUILD_TYPE STREQUAL Debug)
-        set(BOOST_LIB_SUFFIXES -gcc-mt)
+        set(BOOST_LIBRARIES_SUFFIXES
+          -gcc-mt
+        )
       endif (CMAKE_BUILD_TYPE STREQUAL Debug)
     endif (CYGWIN)
 
   else (WIN32)
-    set(BOOST_LIB_SUFFIXES -gcc-mt)
+    set(BOOST_LIBRARIES_SUFFIXES
+        -gcc-mt
+        -gcc41-mt
+    )
   endif (WIN32)
 
   find_path(BOOST_INCLUDE_DIR
     NAMES
       boost/config.hpp
     PATHS
-      /usr/include
-      /usr/local/include
-      /opt/local/include
-      /sw/include
-      ${BOOST_SEARCH_DIRS}
+      ${BOOST_INCLUDE_SEARCH_DIRS}
     PATH_SUFFIXES
       ${BOOST_PATH_SUFFIX}
   )
 
-  foreach (BOOST_LIB_SUFFIX "" ${BOOST_LIB_SUFFIXES})
+
+  foreach (TMP_BOOST_LIBRARIES_SUFFIX "" ${BOOST_LIBRARIES_SUFFIXES})
+
     if (NOT BOOST_DATE_TIME_LIBRARY)
       find_library(BOOST_DATE_TIME_LIBRARY
         NAMES
-          boost_date_time${BOOST_LIB_SUFFIX}
+          boost_date_time${TMP_BOOST_LIBRARIES_SUFFIX}
         PATHS
-          ${BOOST_SEARCH_DIRS}
-          /usr/lib
-          /usr/local/lib
-          /opt/local/lib
-          /sw/lib
+          ${BOOST_LIBRARIES_SEARCH_DIRS}
       )
+
+      if (BOOST_DATE_TIME_LIBRARY)
+        # BOOST_DATE_TIME_LIBRARY was found
+        # sets the libraries suffix, this code is ugly
+        # but CMake does not allow to break a loop :/
+        set(BOOST_LIBRARIES_SUFFIX
+          ${TMP_BOOST_LIBRARIES_SUFFIX}
+          CACHE INTERNAL "" FORCE
+        )
+      endif (BOOST_DATE_TIME_LIBRARY)
+
     endif (NOT BOOST_DATE_TIME_LIBRARY)
 
     if (NOT BOOST_FILESYSTEM_LIBRARY)
       find_library(BOOST_FILESYSTEM_LIBRARY
         NAMES
-          boost_filesystem${BOOST_LIB_SUFFIX}
+          boost_filesystem${TMP_BOOST_LIBRARIES_SUFFIX}
         PATHS
-          ${BOOST_SEARCH_DIRS}
-          /usr/lib
-          /usr/local/lib
-          /opt/local/lib
-          /sw/lib
+          ${BOOST_LIBRARIES_SEARCH_DIRS}
       )
     endif (NOT BOOST_FILESYSTEM_LIBRARY)
 
     if (NOT BOOST_IOSTREAMS_LIBRARY)
       find_library(BOOST_IOSTREAMS_LIBRARY
         NAMES
-          boost_iostreams${BOOST_LIB_SUFFIX}
+          boost_iostreams${TMP_BOOST_LIBRARIES_SUFFIX}
         PATHS
-          ${BOOST_SEARCH_DIRS}
-          /usr/lib
-          /usr/local/lib
-          /opt/local/lib
-          /sw/lib
+          ${BOOST_LIBRARIES_SEARCH_DIRS}
       )
     endif (NOT BOOST_IOSTREAMS_LIBRARY)
 
     if (NOT BOOST_PRG_EXEC_MONITOR_LIBRARY)
       find_library(BOOST_PRG_EXEC_MONITOR_LIBRARY
         NAMES
-          boost_prg_exec_monitor${BOOST_LIB_SUFFIX}
+          boost_prg_exec_monitor${TMP_BOOST_LIBRARIES_SUFFIX}
         PATHS
-          ${BOOST_SEARCH_DIRS}
-          /usr/lib
-          /usr/local/lib
-          /opt/local/lib
-          /sw/lib
+          ${BOOST_LIBRARIES_SEARCH_DIRS}
       )
     endif (NOT BOOST_PRG_EXEC_MONITOR_LIBRARY)
 
     if (NOT BOOST_PROGRAM_OPTIONS_LIBRARY)
       find_library(BOOST_PROGRAM_OPTIONS_LIBRARY
         NAMES
-          boost_program_options${BOOST_LIB_SUFFIX}
+          boost_program_options${TMP_BOOST_LIBRARIES_SUFFIX}
         PATHS
-          ${BOOST_SEARCH_DIRS}
-          /usr/lib
-          /usr/local/lib
-          /opt/local/lib
-          /sw/lib
+          ${BOOST_LIBRARIES_SEARCH_DIRS}
       )
     endif (NOT BOOST_PROGRAM_OPTIONS_LIBRARY)
 
     if (NOT BOOST_PYTHON_LIBRARY)
       find_library(BOOST_PYTHON_LIBRARY
         NAMES
-          boost_python${BOOST_LIB_SUFFIX}
+          boost_python${TMP_BOOST_LIBRARIES_SUFFIX}
         PATHS
-          ${BOOST_SEARCH_DIRS}
-          /usr/lib
-          /usr/local/lib
-          /opt/local/lib
-          /sw/lib
+          ${BOOST_LIBRARIES_SEARCH_DIRS}
       )
     endif (NOT BOOST_PYTHON_LIBRARY)
 
     if (NOT BOOST_REGEX_LIBRARY)
       find_library(BOOST_REGEX_LIBRARY
         NAMES
-          boost_regex${BOOST_LIB_SUFFIX}
+          boost_regex${TMP_BOOST_LIBRARIES_SUFFIX}
         PATHS
-          ${BOOST_SEARCH_DIRS}
-          /usr/lib
-          /usr/local/lib
-          /opt/local/lib
-          /sw/lib
+          ${BOOST_LIBRARIES_SEARCH_DIRS}
       )
     endif (NOT BOOST_REGEX_LIBRARY)
 
     if (NOT BOOST_SERIALIZATION_LIBRARY)
       find_library(BOOST_SERIALIZATION_LIBRARY
         NAMES
-          boost_serialization${BOOST_LIB_SUFFIX}
+          boost_serialization${TMP_BOOST_LIBRARIES_SUFFIX}
         PATHS
-          ${BOOST_SEARCH_DIRS}
-          /usr/lib
-          /usr/local/lib
-          /opt/local/lib
-          /sw/lib
+          ${BOOST_LIBRARIES_SEARCH_DIRS}
       )
     endif (NOT BOOST_SERIALIZATION_LIBRARY)
 
     if (NOT BOOST_SIGNALS_LIBRARY)
       find_library(BOOST_SIGNALS_LIBRARY
         NAMES
-          boost_signals${BOOST_LIB_SUFFIX}
+          boost_signals${TMP_BOOST_LIBRARIES_SUFFIX}
         PATHS
-          ${BOOST_SEARCH_DIRS}
-          /usr/lib
-          /usr/local/lib
-          /opt/local/lib
-          /sw/lib
+          ${BOOST_LIBRARIES_SEARCH_DIRS}
       )
     endif (NOT BOOST_SIGNALS_LIBRARY)
 
     if (NOT BOOST_TEST_EXEC_MONITOR_LIBRARY)
+      if (WIN32)
+        set (_name libboost_test_exec_monitor${TMP_BOOST_LIBRARIES_SUFFIX})
+      else (WIN32)
+        set (_name boost_test_exec_monitor${TMP_BOOST_LIBRARIES_SUFFIX})
+      endif (WIN32)
       find_library(BOOST_TEST_EXEC_MONITOR_LIBRARY
         NAMES
-          boost_test_exec_monitor${BOOST_LIB_SUFFIX}
+          ${_name}
         PATHS
-          ${BOOST_SEARCH_DIRS}
-          /usr/lib
-          /usr/local/lib
-          /opt/local/lib
-          /sw/lib
+          ${BOOST_LIBRARIES_SEARCH_DIRS}
       )
     endif (NOT BOOST_TEST_EXEC_MONITOR_LIBRARY)
 
     if (NOT BOOST_THREAD_LIBRARY)
       find_library(BOOST_THREAD_LIBRARY
         NAMES
-          boost_thread${BOOST_LIB_SUFFIX}
+          boost_thread${TMP_BOOST_LIBRARIES_SUFFIX}
           boost_thread-mt
         PATHS
-          ${BOOST_SEARCH_DIRS}
-          /usr/lib
-          /usr/local/lib
-          /opt/local/lib
-          /sw/lib
+          ${BOOST_LIBRARIES_SEARCH_DIRS}
       )
     endif (NOT BOOST_THREAD_LIBRARY)
 
     if (NOT BOOST_UNIT_TEST_FRAMEWORK_LIBRARY)
-	  set (_boost_unit_test_lib_name "")
-	  if (WIN32)
-	    set (_boost_unit_test_lib_name libboost_unit_test_framework${BOOST_LIB_SUFFIX})
-	  else (WIN32)
-	    set (_boost_unit_test_lib_name boost_unit_test_framework${BOOST_LIB_SUFFIX})
-	  endif (WIN32)
-
+      set (_boost_unit_test_lib_name "")
+      if (WIN32)
+        set (_boost_unit_test_lib_name libboost_unit_test_framework${TMP_BOOST_LIBRARIES_SUFFIX})
+      else (WIN32)
+        set (_boost_unit_test_lib_name boost_unit_test_framework${TMP_BOOST_LIBRARIES_SUFFIX})
+      endif (WIN32)
       find_library(BOOST_UNIT_TEST_FRAMEWORK_LIBRARY
         NAMES
           ${_boost_unit_test_lib_name}
         PATHS
-          ${BOOST_SEARCH_DIRS}
-          /usr/lib
-          /usr/local/lib
-          /opt/local/lib
-          /sw/lib
+          ${BOOST_LIBRARIES_SEARCH_DIRS}
       )
     endif (NOT BOOST_UNIT_TEST_FRAMEWORK_LIBRARY)
 
     if (NOT BOOST_WSERIALIZATION_LIBRARY)
       find_library(BOOST_WSERIALIZATION_LIBRARY
         NAMES
-          boost_wserialization${BOOST_LIB_SUFFIX}
+          boost_wserialization${TMP_BOOST_LIBRARIES_SUFFIX}
         PATHS
-          ${BOOST_SEARCH_DIRS}
-          /usr/lib
-          /usr/local/lib
-          /opt/local/lib
-          /sw/lib
+          ${BOOST_LIBRARIES_SEARCH_DIRS}
       )
     endif (NOT BOOST_WSERIALIZATION_LIBRARY)
 
@@ -324,7 +326,7 @@ else (BOOST_LIBRARIES AND BOOST_INCLUDE_DIRS)
       set(BOOST_WSERIALIZATION_FOUND TRUE)
     endif (BOOST_WSERIALIZATION_LIBRARY)
 
-  endforeach (BOOST_LIB_SUFFIX)
+  endforeach (TMP_BOOST_LIBRARIES_SUFFIX)
 
   set(BOOST_INCLUDE_DIRS
     ${BOOST_INCLUDE_DIR}
@@ -433,6 +435,6 @@ else (BOOST_LIBRARIES AND BOOST_INCLUDE_DIRS)
   endif (WIN32)
 
   # show the BOOST_INCLUDE_DIRS and BOOST_LIBRARIES variables only in the advanced view
-  mark_as_advanced(BOOST_INCLUDE_DIRS BOOST_LIBRARIES BOOST_LIBRARY_DIRS)
+  mark_as_advanced(BOOST_INCLUDE_DIRS BOOST_LIBRARIES BOOST_LIBRARY_DIRS BOOST_DEFINITIONS BOOST_LIBRARIES_SUFFIX)
 
 endif (BOOST_LIBRARIES AND BOOST_INCLUDE_DIRS)
