@@ -7,6 +7,7 @@
 #  BOOST_LIBRARY_DIRS - The path to where the Boost library files are.
 #  BOOST_DEFINITIONS - Compiler switches required for using Boost
 #  BOOST_LIBRARIES_SUFFIX - Boost libraries name suffix (e.g -vc71-mt-gd-1_34, -gcc41-mt...)
+#  BOOST_VERSION - Boost version, as defined in boost/version.hpp. For 1.33.1 it is 103301.
 #
 #  BOOST_DATE_TIME_FOUND               True if Boost Date Time was found.
 #  BOOST_FILESYSTEM_FOUND              True if Boost Filesystem was found.
@@ -36,7 +37,7 @@
 #  BOOST_UNIT_TEST_FRAMEWORK_LIBRARY   The Boost Unit Test Framework libary.
 #  BOOST_WSERIALIZATION_LIBRARY        The Boost WSerialization libary.
 #
-#  Copyright (c) 2006 Andreas Schneider <mail@cynapses.org>
+# Copyright (c) 2006 Andreas Schneider <mail@cynapses.org>
 #  Copyright (c) 2007 Wengo
 #
 #  Redistribution and use is allowed according to the terms of the New
@@ -78,7 +79,6 @@ else (BOOST_LIBRARIES AND BOOST_INCLUDE_DIRS)
 
     set(BOOST_INCLUDE_SEARCH_DIRS
       $ENV{BOOSTINCLUDEDIR}
-      $ENV{BOOST_ROOT}/include
       C:/boost/include
       "C:/Program Files/boost/boost_1_34_0"
       "C:/Program Files/boost/boost_1_33_1"
@@ -93,7 +93,6 @@ else (BOOST_LIBRARIES AND BOOST_INCLUDE_DIRS)
 
     set(BOOST_LIBRARIES_SEARCH_DIRS
       $ENV{BOOSTLIBDIR}
-      $ENV{BOOST_ROOT}/lib
       C:/boost/lib
       "C:/Program Files/boost/boost_1_34_0/lib"
       "C:/Program Files/boost/boost_1_33_1/lib"
@@ -106,11 +105,13 @@ else (BOOST_LIBRARIES AND BOOST_INCLUDE_DIRS)
     if (MSVC71)
       if (CMAKE_BUILD_TYPE STREQUAL Debug)
         set(BOOST_LIBRARIES_SUFFIXES
+          -vc71-mt-gd-1_34_1
           -vc71-mt-gd-1_34
           -vc71-mt-gd-1_33_1
         )
       else (CMAKE_BUILD_TYPE STREQUAL Debug)
         set(BOOST_LIBRARIES_SUFFIXES
+          -vc71-mt-1_34_1
           -vc71-mt-1_34
           -vc71-mt-1_33_1
         )
@@ -120,11 +121,13 @@ else (BOOST_LIBRARIES AND BOOST_INCLUDE_DIRS)
     if (MSVC80)
       if (CMAKE_BUILD_TYPE STREQUAL Debug)
         set(BOOST_LIBRARIES_SUFFIXES
+          -vc80-mt-gd-1_34_1
           -vc80-mt-gd-1_34
           -vc80-mt-gd-1_33_1
         )
       else (CMAKE_BUILD_TYPE STREQUAL Debug)
         set(BOOST_LIBRARIES_SUFFIXES
+          -vc80-mt-1_34_1
           -vc80-mt-1_34
           -vc80-mt-1_33_1
         )
@@ -135,10 +138,12 @@ else (BOOST_LIBRARIES AND BOOST_INCLUDE_DIRS)
       if (CMAKE_BUILD_TYPE STREQUAL Debug)
         set(BOOST_LIBRARIES_SUFFIXES
           -mgw-mt-d
+          -mgw34-mt-d-1_34_1
         )
       else (CMAKE_BUILD_TYPE STREQUAL Debug)
         set(BOOST_LIBRARIES_SUFFIXES
           -mgw-mt
+          -mgw34-mt-1_34_1
         )
       endif (CMAKE_BUILD_TYPE STREQUAL Debug)
     endif (MINGW)
@@ -159,6 +164,8 @@ else (BOOST_LIBRARIES AND BOOST_INCLUDE_DIRS)
     set(BOOST_LIBRARIES_SUFFIXES
         -gcc-mt
         -gcc41-mt
+        -gcc41-mt-1_34
+        -gcc41-mt-1_34_1
     )
   endif (WIN32)
 
@@ -171,6 +178,16 @@ else (BOOST_LIBRARIES AND BOOST_INCLUDE_DIRS)
       ${BOOST_PATH_SUFFIX}
   )
 
+  if (APPLE)
+    # CMake bug on Mac OS X:
+    # When include path has been found in a .framework, 
+    # BOOST_INCLUDE_DIR is path_to_boost_inc_dir/boost
+    # where it should be path_to_boost_inc_dir.
+    # This code removes the trailing boost if needed.
+    if (NOT EXISTS ${BOOST_INCLUDE_DIR}/boost/config.hpp)
+      get_filename_component(BOOST_INCLUDE_DIR ${BOOST_INCLUDE_DIR} PATH)
+    endif (NOT EXISTS ${BOOST_INCLUDE_DIR}/boost/config.hpp)
+  endif (APPLE)
 
   foreach (TMP_BOOST_LIBRARIES_SUFFIX "" ${BOOST_LIBRARIES_SUFFIXES})
 
@@ -267,14 +284,10 @@ else (BOOST_LIBRARIES AND BOOST_INCLUDE_DIRS)
     endif (NOT BOOST_SIGNALS_LIBRARY)
 
     if (NOT BOOST_TEST_EXEC_MONITOR_LIBRARY)
-      if (WIN32)
-        set (_name libboost_test_exec_monitor${TMP_BOOST_LIBRARIES_SUFFIX})
-      else (WIN32)
-        set (_name boost_test_exec_monitor${TMP_BOOST_LIBRARIES_SUFFIX})
-      endif (WIN32)
       find_library(BOOST_TEST_EXEC_MONITOR_LIBRARY
         NAMES
-          ${_name}
+          boost_test_exec_monitor${TMP_BOOST_LIBRARIES_SUFFIX}
+		  libboost_test_exec_monitor${TMP_BOOST_LIBRARIES_SUFFIX}
         PATHS
           ${BOOST_LIBRARIES_SEARCH_DIRS}
       )
@@ -291,15 +304,10 @@ else (BOOST_LIBRARIES AND BOOST_INCLUDE_DIRS)
     endif (NOT BOOST_THREAD_LIBRARY)
 
     if (NOT BOOST_UNIT_TEST_FRAMEWORK_LIBRARY)
-      set (_boost_unit_test_lib_name "")
-      if (WIN32)
-        set (_boost_unit_test_lib_name libboost_unit_test_framework${TMP_BOOST_LIBRARIES_SUFFIX})
-      else (WIN32)
-        set (_boost_unit_test_lib_name boost_unit_test_framework${TMP_BOOST_LIBRARIES_SUFFIX})
-      endif (WIN32)
       find_library(BOOST_UNIT_TEST_FRAMEWORK_LIBRARY
         NAMES
-          ${_boost_unit_test_lib_name}
+          boost_unit_test_framework${TMP_BOOST_LIBRARIES_SUFFIX}
+		  libboost_unit_test_framework${TMP_BOOST_LIBRARIES_SUFFIX}
         PATHS
           ${BOOST_LIBRARIES_SEARCH_DIRS}
       )
@@ -441,15 +449,18 @@ else (BOOST_LIBRARIES AND BOOST_INCLUDE_DIRS)
 
   if (BOOST_INCLUDE_DIRS AND BOOST_LIBRARIES)
     set(BOOST_FOUND TRUE)
+    # Look for a line like this: '#define BOOST_VERSION 103301' in version.hpp
+    file(READ ${BOOST_INCLUDE_DIR}/boost/version.hpp _boost_version_hpp)
+    string(REGEX REPLACE ".*\n#define BOOST_VERSION ([0-9]+).*" "\\1" BOOST_VERSION "${_boost_version_hpp}")
   endif (BOOST_INCLUDE_DIRS AND BOOST_LIBRARIES)
 
   if (BOOST_FOUND)
     if (NOT Boost_FIND_QUIETLY)
-      message(STATUS "Found Boost: ${BOOST_LIBRARIES}")
+      message(STATUS "Found Boost version ${BOOST_VERSION}: ${BOOST_INCLUDE_DIRS}, ${BOOST_LIBRARIES}")
     endif (NOT Boost_FIND_QUIETLY)
   else (BOOST_FOUND)
     if (Boost_FIND_REQUIRED)
-      message(FATAL_ERROR "Please install the Boost libraries and development packages")
+      message(FATAL_ERROR "Could not find Boost")
     endif (Boost_FIND_REQUIRED)
   endif (BOOST_FOUND)
 
