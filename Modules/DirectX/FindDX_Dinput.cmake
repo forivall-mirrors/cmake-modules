@@ -1,4 +1,4 @@
-## deng build scripts. 
+## deng build scripts.
 ## Copyright © 2006:	Jamie Jones (Yagisan) <jamie_jones_au@yahoo.com.au>
 ## This file is licensed under the GNU GPLv2 or any later versions,
 ## or at your option the BSD 3 clause license. Both license texts follow.
@@ -19,7 +19,7 @@
 ##
 ## You should have received a copy of the GNU General Public License
 ## along with the deng build scripts; if not, write to the Free Software
-## Foundation, Inc., 51 Franklin St, Fifth Floor, 
+## Foundation, Inc., 51 Franklin St, Fifth Floor,
 ## Boston, MA  02110-1301  USA
 ##
 ################################################################################
@@ -61,16 +61,18 @@
 
 FIND_PATH(DIRECTX_DINPUT_INCLUDE_DIR dinput.h
   $ENV{DIRECTXDIR}/include
+  $ENV{DXSDK_DIR}/include
   /usr/local/include/directx
   /usr/local/include
   /usr/include
 )
 
-SET(DIRECTX_DINPUT_NAMES ${DIRECTX_DINPUT_NAMES} dinput)
+SET(DIRECTX_DINPUT_NAMES ${DIRECTX_DINPUT_NAMES} dinput dinput8)
 FIND_LIBRARY(DIRECTX_DINPUT_LIBRARY
   NAMES ${DIRECTX_DINPUT_NAMES}
-  PATHS 
+  PATHS
   $ENV{DIRECTXDIR}/lib
+  $ENV{DXSDK_DIR}/include
   /usr/lib
   /usr/local/lib
   /usr/local/lib/directx
@@ -88,4 +90,3 @@ IF(DIRECTX_DINPUT_LIBRARY)
 ENDIF(DIRECTX_DINPUT_LIBRARY)
 
 # vim:et ts=2 sw=2 comments=\:\#
-
